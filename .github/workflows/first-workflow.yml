@@ -1,0 +1,29 @@
+name: My First Workflow
+on: 
+  push:
+    branches: [main]
+    paths-ignore: [.github/**]
+  schedule:
+    - cron: "1,31 8-18 * * 1-5"
+  workflow_dispatch: 
+
+jobs:
+  First-Job:
+    runs-on: ubuntu-latest
+    permissions: read-all
+    steps:
+      - run: |
+          echo "This job was triggered by ${{ github.event_name }}"
+          echo "Branch name is ${{ github.ref }} and repository is ${{github.repository}}."
+          echo "Triggered by: ${{github.actor}} using ${{ github.event_name }} ">> $GITHUB_STEP_SUMMARY
+      - uses: actions/checkout@v7.0.0  
+      
+      - name: List repo files
+        run: |
+          echo "${{github.repository}} contains:"
+          echo "::group::Directory Structure"
+          tree . -L 5
+          echo "::endgroup::"
+          echo "::group::Github object"
+          echo "${{ toJson(github) }}"
+          echo "::endgroup::"         
