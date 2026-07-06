@@ -1,0 +1,30 @@
+name: GitHub Actions Demo
+on: 
+  push:
+    branches: [main]
+    paths-ignore: [.github/**]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "15 6 * * 0"
+  workflow_dispatch: 
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    permissions: read-all
+    steps:
+      - run: |
+          echo "Event name: ${{ github.event_name }}"
+          echo "Branch name: ${{ github.ref }}"
+      - uses: actions/checkout@v7.0.0  
+      
+      - name: List repo files
+        run: |
+          echo "${{github.repository}} contains:"
+          echo "::group::Directory Structure"
+          tree . -L 5
+          echo "::endgroup::"
+          echo "::group::Github object"
+          echo "${{ toJson(github) }}"
+          echo "::endgroup::"         
