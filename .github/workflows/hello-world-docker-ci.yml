@@ -1,0 +1,28 @@
+name: Greeting
+
+on:
+  push:
+    branches: [main]
+    paths: [hello-world-docker-action/**]
+  workflow_dispatch:
+    inputs:
+      who-to-greet:
+        description: 'Who to greet'
+        type: string
+        required: true 
+        default: world
+
+jobs:
+  test-my-action:
+    runs-on: ubuntu-latest
+    steps:
+      - name : checkout
+        uses : actions/checkout@v6
+
+      - name : run-action
+        id : action-checker
+        uses :  ./hello-world-docker-action
+        with :
+          who-to-greet: ${{ inputs.who-to-greet }}
+      - name: show output
+        run : echo "The time was ${{ steps.action-checker.outputs.time }}"
