@@ -13,7 +13,7 @@ on:
         default: world
 
 jobs:
-  test-my-action:
+  run-greeting-action:
     runs-on: ubuntu-latest
     steps:
       - name : checkout
