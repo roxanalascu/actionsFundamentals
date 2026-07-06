@@ -23,9 +23,4 @@ jobs:
       - name: List repo files
         run: |
           echo "${{github.repository}} contains:"
-          echo "::group::Directory Structure"
-          tree . -L 5
-          echo "::endgroup::"
-          echo "::group::Github object"
-          echo "${{ toJson(github) }}"
-          echo "::endgroup::"         
+          tree . -L 5       
