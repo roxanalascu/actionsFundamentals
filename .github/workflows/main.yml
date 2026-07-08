@@ -1,0 +1,40 @@
+name: environment-demo
+
+on:
+  workflow_dispatch:
+    inputs:
+      environments:
+        type: environment
+        description: "which environment?"
+        required: true
+jobs:
+  build:
+    runs-on: ubuntu-slim
+    steps:
+      - run: echo "🏗️ Build completed"
+  dev:
+    runs-on: ubuntu-latest
+    needs: build
+    environment: dev
+    steps:
+      - run: echo ${{ vars.SERVICE_ACCOUNT_NAME }} ; echo ${{ secrets.SERVICE_ACCOUNT_PASSWORD }}
+      - if: ${{ inputs.environments == 'dev' }}
+        run: echo "🔍 Special steps for selected environment ${{ inputs.environments }}" >> $GITHUB_STEP_SUMMARY      
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    environment: test
+    steps:
+      - run: echo ${{ vars.SERVICE_ACCOUNT_NAME }} ; echo ${{ secrets.SERVICE_ACCOUNT_PASSWORD }}
+      - if: ${{ inputs.environments == 'test' }}
+        run: echo "🔍 Special steps for selected environment ${{ inputs.environments }}" >> $GITHUB_STEP_SUMMARY
+  prod:
+    runs-on: ubuntu-latest
+    needs: [dev, test]
+    environment: prod
+    steps:
+      - run: echo ${{ vars.SERVICE_ACCOUNT_NAME }} ; echo ${{ secrets.SERVICE_ACCOUNT_PASSWORD }}
+      - if: ${{ inputs.environments == 'prod' }}
+        run: echo "🔍 Special steps for selected environment ${{ inputs.environments }}" >> $GITHUB_STEP_SUMMARY
+
+        
