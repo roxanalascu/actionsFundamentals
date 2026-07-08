@@ -1,0 +1,22 @@
+name: matrix-demo
+
+on: 
+  workflow_dispatch:
+     inputs:
+       environments:
+        type: environment
+        description: "which environment?"
+        required: true
+jobs:
+  showmyvars:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        env: [dev,test,qa,prod]
+        
+    environment: ${{ matrix.env }}
+    steps:
+      - run: echo ${{vars.SERVICE_ACCOUNT_NAME }} ; echo ${{ secrets.SERVICE_ACCOUNT_PASSWORD }}
+      - if: ${{ matrix.env == inputs.environments }}
+        run: echo "🔍 Special steps for selected environment ${{ inputs.environments }}" >> $GITHUB_STEP_SUMMARY        
